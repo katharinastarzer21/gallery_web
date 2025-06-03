@@ -1,0 +1,69 @@
+name: Preview New Cookbook
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+jobs:
+  preview-cookbook:
+    if: github.event.label.name == 'add-repo' || contains(github.event.issue.labels.*.name, 'add-repo')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout workflow repository
+        uses: actions/checkout@v4
+      
+      - name: Install required packages
+        run: |
+          pip install -r templates/requirements.txt
+          pip install pyyaml 
+
+      - name: Save issue body to file
+        run: echo "${{ github.event.issue.body }}" > issue_body.txt
+
+      - name: Parse Issue Data
+        id: parse
+        run: |
+          python scripts/parse_issue.py --preview
+
+      - name: Debug parsed env vars
+        run: |
+          echo "REPO_URL=$REPO_URL"
+          echo "ROOT_PATH=$ROOT_PATH"
+
+      - name: Import Cookbook
+        run: |
+          python scripts/import_cookbook.py --repo_url "$REPO_URL" --root_path "$ROOT_PATH"
+
+      - name: Ensure index.md includes notebooks
+        run: |
+          INDEX_PATH="cookbooks/$ROOT_PATH/index.md"
+          if ! grep -q "toctree" "$INDEX_PATH"; then
+            echo -e "# Auto-generated index\n\n\`\`\`{toctree}\n:maxdepth: 2" > "$INDEX_PATH"
+            for f in cookbooks/$ROOT_PATH/notebooks/*.ipynb; do
+              echo "notebooks/$(basename "$f")" >> "$INDEX_PATH"
+            done
+            echo '```' >> "$INDEX_PATH"
+          fi
+
+      - name: Build Sphinx documentation
+        run: |
+          sphinx-build -b html cookbooks/$ROOT_PATH cookbooks/$ROOT_PATH/_build/html -c docs
+
+      - name: Deploy Preview to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: cookbooks/${{ env.ROOT_PATH }}/_build/html
+          destination_dir: preview/${{ env.ROOT_PATH }}
+          keep_files: true
+
+      - name: Comment with preview link
+        uses: peter-evans/create-or-update-comment@v4
+        env:
+          ROOT_PATH: ${{ env.ROOT_PATH }}
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Preview ready:  
+            [View Cookbook Preview](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/preview/${{ env.ROOT_PATH }}/index.html)

@@ -1,0 +1,110 @@
+name: "Cookbook Production Build"
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  deploy:
+    if: github.event.issue.user.login == 'katharinastarzer21'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout DestinE repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Save issue body to file
+        run: echo "${{ github.event.issue.body }}" > issue_body.txt
+
+      - name: Install required packages
+        run: |
+          pip install -r templates/requirements.txt
+          pip install pyyaml 
+
+      - name: Parse Issue Data
+        id: parse
+        run: |
+          python scripts/parse_issue.py 
+
+      - name: Import Cookbook
+        run: |
+          python scripts/import_cookbook.py --repo_url "$REPO_URL" --root_path "$ROOT_PATH"
+        env:
+          REPO_URL: ${{ env.REPO_URL }}
+          ROOT_PATH: ${{ env.ROOT_PATH }}
+
+      - name: Install Sphinx build dependencies
+        run: |
+          pip install -r templates/requirements.txt
+          pip install myst-nb
+
+      - name: Copy default conf.py/reqs if missing
+        run: |
+          python scripts/ensure_defaults.py --cookbook_dir "./cookbooks/${{ env.ROOT_PATH }}"
+
+      - name: Clone submitted repository
+        run: |
+          git clone "$REPO_URL" submitted_repo
+          if [ -f submitted_repo/README.md ] && [ ! -f submitted_repo/index.md ]; then
+            cp submitted_repo/README.md submitted_repo/index.md
+          fi
+
+      - name: Ensure index.md includes notebooks
+        run: |
+          INDEX_PATH="cookbooks/$ROOT_PATH/index.md"
+          if ! grep -q "toctree" "$INDEX_PATH"; then
+            echo -e "# Auto-generated index\n\n\`\`\`{toctree}\n:maxdepth: 2" > "$INDEX_PATH"
+            for f in cookbooks/$ROOT_PATH/notebooks/*.ipynb; do
+              echo "notebooks/$(basename "$f")" >> "$INDEX_PATH"
+            done
+            echo '```' >> "$INDEX_PATH"
+          fi
+
+      - name: Build Sphinx site
+        run: |
+          sphinx-build -b html submitted_repo submitted_repo/_build/html -c docs
+
+      - name: Deploy to GitHub Pages (production)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: submitted_repo/_build/html
+          destination_dir: production/${{ env.ROOT_PATH }}
+          keep_files: true
+
+      - name: Update docs/index.md with new cookbooks
+        run: python scripts/update_index.py
+
+      - name: Commit and push updated index.md
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add docs/index.md
+          git commit -m "Update index.md with new cookbook" || echo "No changes to commit"
+          git push origin main
+
+      - name: Build and Deploy central docs
+        working-directory: docs
+        run: |
+          sphinx-build . _build/html
+
+      - name: Deploy central docs to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
+          destination_dir: .
+          keep_files: true
+
+      - name: Comment with production link
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ✅ Cookbook deployed!
+            🔗 https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/production/${{ env.ROOT_PATH }}/index.html

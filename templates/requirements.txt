@@ -1,0 +1,10 @@
+sphinx
+myst-parser
+nbsphinx
+sphinx-book-theme
+sphinx-design
+myst-nb
+pyyaml
+ghp-import
+snowballstemmer
+nltk
