@@ -1,5 +1,7 @@
 version: 1
 project:
+  jupyter: true
+  github: katharinastarzer21/gallery_web
   toc:
     - file: index.md
 
@@ -13,7 +15,7 @@ project:
     - title: Services
       children:
         - title: Argo Workflows
-          file: source/services/ARGO_WORKFLOWS/argo_workflows.md
+          file: source/services/ARGO_WORKFLOWS/test.ipynb
           children:
             - file: source/services/ARGO_WORKFLOWS/eodc_sdk_argo.md
               hidden: true
