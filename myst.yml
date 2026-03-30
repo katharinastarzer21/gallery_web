@@ -1,0 +1,130 @@
+version: 1
+project:
+  toc:
+    - file: index.md
+
+    - title: Overview
+      children:
+        - file: source/overview/about.md
+        - file: source/overview/funding.md
+        - file: source/overview/support.md
+        - file: source/overview/acube.md
+
+    - title: Services
+      children:
+        - title: Argo Workflows
+          file: source/services/ARGO_WORKFLOWS/argo_workflows.md
+          children:
+            - file: source/services/ARGO_WORKFLOWS/eodc_sdk_argo.md
+              hidden: true
+
+        - title: Chiller
+          file: source/services/CHILLER/chiller.md
+
+        - title: CSW
+          file: source/services/CSW/csw.md
+
+        - title: DASK
+          file: source/services/DASK/dask.md
+          children:
+            - file: source/services/DASK/dask.ipynb
+              hidden: true
+
+        - title: GFM
+          file: source/services/GFM/gfm_gallery.md
+          children:
+            - file: source/services/GFM/gfm_download_python.ipynb
+              hidden: true
+            - fie: source/services/GFM/gfm_dask_objectstorage.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_filter.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_maximum_flood_extent_dask.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_maximum_flood_extent_local.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_maximum_flood_extent_simple_plot.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_maximum_flood_extent_stac.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_plot_flood_scene.ipynb
+              hidden: true
+            - file: source/services/GFM/gfm_evaluation.ipynb
+              hidden: true
+
+        - title: HPC
+          file: source/services/HPC/hpc.md
+
+        - title: Objectstore
+          file: source/services/OBJECTSTORE/objectstore.md
+          children:
+            - file: source/services/OBJECTSTORE/s3cmd.md
+              hidden: true
+
+        - title: OpenEO
+          file: source/services/OPENEO/openeo_gallery.md
+          children:
+            - file: source/services/OPENEO/openeo-processes.md
+              hidden: true
+            - file: source/services/OPENEO/sen2like.md
+              hidden: true
+            - file: source/services/OPENEO/workspaces.md
+              hidden: true
+
+        - title: OpenStack
+          file: source/services/OPENSTACK/openstack.md
+          children:
+            - file: source/services/OPENSTACK/general.md
+              hidden: true
+            - file: source/services/OPENSTACK/openstack_starting.md
+              hidden: true
+            - file: source/services/OPENSTACK/loadbalancers.md
+              hidden: true
+            - file: source/services/OPENSTACK/distributions.md
+              hidden: true
+
+        - title: PyGeoAPI
+          file: source/services/PYGEOAPI/pygeoapi.md
+          children:
+            - file: source/services/PYGEOAPI/pygeoapi_yipeeo.md
+              hidden: true
+
+        - title: STAC
+          file: source/services/STAC/stac.md
+          children:
+            - file: source/services/STAC/python-stac_DataDiscovery.ipynb
+              hidden: true
+            - file: source/services/STAC/python-stac_LoadDataXarray.ipynb
+              hidden: true
+            - file: source/services/STAC/stac_jupyter.md 
+              hidden: true
+            - file: source/services/STAC/Sentinel-2.md
+              hidden: true
+
+
+        - title: HPC
+          file: source/services/hpc_gallery.md
+
+    - title: Additional Tutorials
+      children:
+        - title: Bucket Policies
+          file: source/tutorials/bucket_policies.md
+        - title: LINUX
+          file: source/services/LINUX/linux.md
+        - title: Titiler overview
+          file: source/tutorials/Thumbnail-Creation.md
+        - title: Video Tutorials
+          file: source/tutorials/video_tutorials_webinar.md
+        - title: Virtual Machine Time Synv
+          file: source/tutorials/time_sync.md
+        - title: Web Feature Services (WFS)
+          file: source/tutorials/wfs.md
+site:
+  template: book-theme
+  options:
+    style: style/custom.css
+    favicon: style/eodc_logo_descr.png
+    logo: style/eodc_logo_descr.png
+    hide_footer_links: true
+  parts:
+    footer: footer.md

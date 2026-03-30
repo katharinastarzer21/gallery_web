@@ -1,0 +1,40 @@
+/* custom.css */
+/* Increase the width of the content */
+.content {
+    max-width: 80%;
+    width: 70%; /* Adjust this percentage to your desired width */
+}
+
+/* Adjust the width of the sidebar if needed */
+.sidebar {
+    max-width: 10%; /* Adjust this percentage to your desired width */
+}
+
+:root {
+    --nftt-primary-rgb: 255, 255, 255 !important;
+}
+
+.nftt-footer {
+    --nftt-foot1-bg: #bae3fa !important;
+    --nftt-foot2-bg: #ffff !important;
+}
+
+.btn-primary {
+    --nftt-btn-bg: #40bee0 !important;
+    --nftt-btn-border-color: #40bee0 !important;
+    --nftt-btn-hover-bg: #40bee0 !important;
+    --nftt-btn-hover-border-color: #40bee0 !important;
+    --nftt-btn-active-bg: #169eb0 !important;
+    --nftt-btn-active-border-color: #169eb0 !important;
+    --nftt-btn-disabled-bg: #9eb2a9 !important;
+    --nftt-btn-disabled-border-color: !important;
+}
+
+img[alt=logo] { width: 200px; margin-left: 30%; }
+img[alt=dask-logo] { width: 200px; margin-left: 30%; }
+img[alt=argo-workflows-logo] { margin-left: 30%; }
+img[alt=openstack-logo] { width: 200px; margin-left: 30%; }
+img[alt=stac-logo] { width: 200px; margin-left: 30%; }
+img[alt=ceph-logo] { width: 200px; margin-left: 30%; }
+img[alt=vsc-logo] { width: 200px; margin-left: 30%; }
+img[alt=pygeo-logo] { width: 200px; margin-left: 30%; }
