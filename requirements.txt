@@ -5,5 +5,4 @@ numpy
 pandas
 matplotlib
 xarray
-pyplot
 scipy
