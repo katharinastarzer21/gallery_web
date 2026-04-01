@@ -30,7 +30,7 @@ project:
           file: source/services/CHILLER/interactive.md
 
         - title: CSW
-          file: source/services/CSW/csw.md
+          file: source/services/CSW/interactive.ipynb
 
         - title: DASK
           file: source/services/DASK/dask.md
