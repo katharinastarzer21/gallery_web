@@ -1,8 +1,0 @@
-dependencies:
-  - python=3.11.4
-  - pip
-  - ipywidgets
-  - ipyleaflet=0.17.3
-  - pip:
-      - pystac_client
-      - rich
