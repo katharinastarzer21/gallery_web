@@ -27,7 +27,7 @@ project:
               hidden: true
 
         - title: Chiller
-          file: source/services/CHILLER/chiller.md
+          file: source/services/CHILLER/interactive.md
 
         - title: CSW
           file: source/services/CSW/csw.md
